@@ -43,13 +43,14 @@ class BunqLib(object):
 
     _ZERO_BALANCE = 0.0
 
-    def __init__(self, env):
+    def __init__(self, env, conf=None):
         """
         :type env: ApiEnvironmentType
         """
 
         self.user = None
         self.env = env
+        self.conf = conf
         self.setup_context()
         self.setup_current_user()
         self.__request_spending_money_if_needed()
@@ -78,7 +79,9 @@ class BunqLib(object):
                 raise forbidden_exception
 
     def determine_bunq_conf_filename(self):
-        if self.env == ApiEnvironmentType.PRODUCTION:
+        if self.conf is not None:
+            return self.conf
+        elif self.env == ApiEnvironmentType.PRODUCTION:
             return self._BUNQ_CONF_PRODUCTION
         else:
             return self._BUNQ_CONF_SANDBOX
